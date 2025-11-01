@@ -1,0 +1,201 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+
+  <link rel="stylesheet" href="style2.css">
+
+  <script>
+    'use strict';
+    document.addEventListener('DOMContentLoaded', function () {
+      document.querySelector('#guessHigher').addEventListener('click', checkHigher);
+      document.querySelector('#guessEqual').addEventListener('click', checkEqual);
+      document.querySelector('#guessLower').addEventListener('click', checkLower);
+      document.querySelector('#depositButton').addEventListener('click', deposit);
+      document.querySelector('#withdrawButton').addEventListener('click', withdraw);
+      let cSpan = document.getElementById('cSpan');
+      let wSpan = document.getElementById('wSpan');
+      let dSpan = document.getElementById('dSpan');
+      let bSpan = document.getElementById('bankAccount');
+      let bet = document.getElementById('betField');
+      let bankInput = document.getElementById('bankInput');
+      let randomNumberMin = 1;
+      let randomNumberMax = 10;
+      let randomNumber = rand(randomNumberMin, randomNumberMax);
+      let d = 6;
+      let w = 0;
+      let a = 0;
+      let guess = 1;
+      let coins = 10;
+      let bonusAdd = 0;
+      let bonusMul = 1;
+      let bank = 0;
+
+      rollDice();
+      render();
+
+      function rand(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+
+      function deposit() {
+        let value = parseInt(bankInput.value);
+        console.log('Trying to deposit ' + value + ' coins');
+        let newCoins = coins - value;
+        if (newCoins < 0) {
+          alert('Do that, you cannot.');
+          console.log('Failed!');
+          return;
+        }
+        bank = bank + value;
+        coins = newCoins;
+        render();
+        console.log('Success!');
+      }
+
+      function withdraw() {
+        let value = parseInt(bankInput.value);
+        console.log('Trying to withdraw ' + value + ' coins');
+        let newCoins = coins + value;
+        if (newCoins < 0) {
+          alert('Do that, you cannot.');
+          console.log('Failed!');
+          return;
+        }
+        bank = bank - value;
+        coins = newCoins;
+        render();
+        console.log('Success!');
+      }
+
+      function validInput() {
+        console.log('You have ' + coins + ' coins');
+        console.log('You bet ' + bet.value + ' coins');
+        if (bet.value <= 0) {
+          alert("Set a positive number, you must!");
+          return false;
+        }
+        if (bet.value > coins) {
+          alert("Not enough coins, you have!");
+          return false;
+        }
+        return true;
+      }
+
+      function checkHigher() {
+        console.log('Higher pressed');
+        if (!validInput()) return;
+        let value = parseInt(bet.value, 10);
+        coins = coins - value;
+        let change = (w - a + bonusAdd) * bonusMul;
+        coins = coins + value + change;
+        console.log('Your coins changed by ' + change);
+        rollDice();
+        render();
+      }
+
+      function checkEqual() {
+        console.log('Equal pressed');
+        if (!validInput()) return;
+        let value = parseInt(bet.value);
+        let change = 0;
+        if (w == a) {
+          change = (value * 2 + bonusAdd) * bonusMul;
+        } else {
+          change = -value;
+        }
+        coins = coins + change;
+        console.log('Your coins changed by ' + change);
+        rollDice();
+        render();
+      }
+
+      function checkLower() {
+        console.log('Lower pressed');
+        if (!validInput()) return;
+        let value = parseInt(bet.value, 10);
+        coins = coins - value;
+        let change = (a - w + bonusAdd) * bonusMul;
+        coins = coins + value + change;
+        console.log('Your coins changed by ' + change);
+        rollDice();
+        render();
+      }
+
+      function render() {
+        // Log render usage
+        console.log('Rendering...');
+        // Log coins
+        console.log('You have ' + coins + ' coins');
+
+        // Update bet input field attributes
+        bet.max = coins;
+        bet.value = coins;
+
+        // Update spans
+        wSpan.innerText = w;
+        dSpan.innerText = d;
+        cSpan.innerText = coins.toLocaleString();
+        bSpan.innerText = bank; 
+      }
+
+      function rollDice() {
+        // Reroll dice
+        w = rand(1, 6);
+        a = rand(1, 6);
+
+        // Log rolls
+        console.log('You rolled a  : ' + w);
+        console.log('I rolled a    : ' + a);
+      }
+    });
+  </script>
+
+</head>
+
+<body>
+
+  <div class="container">
+
+    <div class="game">
+      Coins: <span id="cSpan"></span>
+      <hr>
+      We both rolled dice. <br>
+      You rolled a <span id="wSpan"></span> on a D<span id="dSpan"></span>.
+      <form>
+        <label for="betField">Bet </label>
+        <input type="number" min="1" max="100" id="betField">
+        coins
+        on:
+        <button type="button" id="guessHigher">Higher</button>
+        <button type="button" id="guessEqual">Equal</button>
+        <button type="button" id="guessLower">Lower</button>
+      </form>
+      <br>
+      If you run out of coins, you can go in debt with your bank account.
+    </div>
+
+    <div class="bank">
+      Bank: <span id="bankAccount"></span>
+      <hr>
+      <form>
+        <input type="number" min="1" class="bankInput" id="bankInput">
+        <button type="button" class="bankButton" id="depositButton">Deposit</button>
+        <button type="button" class="bankButton" id="withdrawButton">Withdraw</button>
+      </form>
+    </div>
+
+    <div class="shop">
+      Shop
+      <hr>
+      <div class="upgrade">
+        Upgrades: WIP
+      </div>
+      
+    </div>
+
+  </div>
+
+</body>
+
+</html>
