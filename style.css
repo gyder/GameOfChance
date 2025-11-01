@@ -1,0 +1,48 @@
+body{
+    background-color: black;
+    color: green;
+    font-family: monospace;
+}
+
+input{
+    background-color: black;
+    color: green;
+    font-family: monospace;
+}
+
+button{
+    background-color: rgb(42, 42, 42);
+    color: green;
+    font-family: monospace;
+}
+
+hr {
+    border-color: gray;
+}
+
+div.container {
+    width: 100%;
+    overflow: auto;
+}
+
+div.game {
+    width: 60%;
+    float: left;
+}
+
+div.bank {
+    width: 40%;
+    float: right;
+    color: gold;
+    margin-bottom: 20px;
+}
+
+div.shop {
+    width: 40%;
+    float: right;
+    color: blue;
+}
+
+body.zoom {
+    zoom: 200%;
+}
